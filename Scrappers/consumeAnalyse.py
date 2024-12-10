@@ -5,7 +5,7 @@ from pymongo import MongoClient
 from datetime import datetime, timezone
 import aiohttp
 import asyncio
-
+from qdrantStorage import QdrantEmbeddingStorage
 # Logging configuration
 logging.basicConfig(
     filename="systemLogs.log",
@@ -27,13 +27,32 @@ async def process_message(message):
     async with aiohttp.ClientSession() as session:
         try:
             # Prepare data for API
-            data = {"text":message.get("content", "")}
+            text_data = message.get("content", "")
+            data = {"text":text_data}
 
             # Send to moderation API
             async with session.post(url, json=data) as response:
                 if response.status == 200:
                     moderation_result = await response.json()
-                    print("Moderation result:", moderation_result)
+                    # print("Moderation result:", moderation_result)
+                    print("Moderation label:", moderation_result)
+                    if moderation_result['moderation_result'][0]['label']!="OK":
+                        print("+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+")
+                        storage = QdrantEmbeddingStorage()
+                        metadata = {
+                            "source": "reddit",
+                            "description": {
+                                "Analysis": moderation_result,
+                                "details": message
+                            }
+                        }
+
+                        success = storage.store_embedding(text_data, metadata)
+                        if success:
+                            logging.info("Embedding successfully stored.")
+                        else:
+                            logging.error("Failed to store embedding.")
+
                 else:
                     logging.error(f"Moderation API error {response.status}: {await response.text()}")
                     print(f"Moderation API error {response.status}: {await response.text()}")
@@ -61,9 +80,7 @@ async def process_message(message):
             print(f"Unexpected error in process_message: {e}")
 
 async def consume_kafka_messages():
-    """
-    Asynchronously consume messages from Kafka and process them.
-    """
+
     kafka_broker = 'localhost:29092'
     topic = 'scraped-data'
 
