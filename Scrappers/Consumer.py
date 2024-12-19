@@ -27,21 +27,7 @@ def process_message(message):
         print(response.json())
     else:
         print(f"Error: {response.status_code}, {response.text}")
-    # # Connect to the local MongoDB instance
-    # client = MongoClient('mongodb://localhost:27017/')
-    # db = client['Scrapped']
-    # collection = db['BigData']
-    #
-    # # Create a document with the current date and time in UTC
-    # document = {
-    #     "data": message,
-    #     "ScrappedTime": datetime.now(timezone.utc)
-    # }
-    #
-    # # Insert the document into the collection
-    # result = collection.insert_one(document)
-    #
-    # print(f"Document inserted with ID: {result.inserted_id}")
+
 
 # Kafka consumer setup
 kafka_broker = 'localhost:29092'

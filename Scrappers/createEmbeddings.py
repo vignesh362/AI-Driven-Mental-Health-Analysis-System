@@ -29,4 +29,4 @@ def creatEmbedding(txt):
     except Exception as e:
         logging.error("Error in embedding creation: %s", e)
         return None
-print(creatEmbedding("I am so depressed Is I think about nothing but the bad things people say about me."))
+# print(creatEmbedding("I am so depressed Is I think about nothing but the bad things people say about me."))
