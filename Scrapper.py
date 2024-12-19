@@ -151,9 +151,9 @@ def extract_subreddit_from_comment(self, comment):
 
 # Set up Reddit API client
 reddit_client = praw.Reddit(
-    client_id="IVbyFluVv38VHU_GcU9xbA",
-    client_secret="RsZPzB1RcktthdibGALZD_DJDg_OJg",
-    user_agent="Maximuzz"
+    client_id="xxxxx",
+    client_secret="xxxxx",
+    user_agent="xxxxx"
 )
 
 
